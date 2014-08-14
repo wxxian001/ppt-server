@@ -1,0 +1,125 @@
+<link href="/ppt/leaks/default.css" rel="stylesheet" type="text/css">
+<span style="font-size:18px">　　<strong>引用计数</strong><br>
+　　引用计数的含义是跟踪记录每个值被引用的次数。当声明了一个变量并将一个引用类型值赋给该变量时，则这个值的引用次数就是1。如果同一个值又被赋给另一个变量，则该值的引用次数加1。相反，如果包含对这个值引用的变量又取得了另外一个值，则这个值的引用次数减1。当这个值的引用次数变成0时，则说明没有办法再访问这个值了，因而就可以将其占用的内存空间回收回来。这样，当垃圾回收器下次再运行时，它就会释放那些引用次数为0的值所占用的内存。<br>
+　　Netscape Navigator3是最早使用引用计数策略的浏览器，但很快它就遇到一个严重的问题：循环引用。循环引用指的是对象A中包含一个指向对象B的指针，而对象B中也包含一个指向对象A的引用。<br>
+</span>
+<div class="dp-highlighter bg_javascript">
+    <div class="bar">
+        <!--
+        <div class="tools"><b>[javascript]</b> <a href="#" class="ViewSource" title="view plain"
+                                                  onclick="dp.sh.Toolbar.Command('ViewSource',this);return false;">view
+            plain</a><a href="#" class="CopyToClipboard" title="copy"
+                        onclick="dp.sh.Toolbar.Command('CopyToClipboard',this);return false;">copy</a><a href="#"
+                                                                                                         class="PrintSource"
+                                                                                                         title="print"
+                                                                                                         onclick="dp.sh.Toolbar.Command('PrintSource',this);return false;">print</a><a
+                href="#" class="About" title="?" onclick="dp.sh.Toolbar.Command('About',this);return false;">?</a>
+
+            <div style="position: absolute; left: 426px; top: 1319px; width: 18px; height: 18px; z-index: 99;">
+                <embed id="ZeroClipboardMovie_1"
+                       src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false"
+                       menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_1"
+                       align="middle" allowscriptaccess="always" allowfullscreen="false"
+                       type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"
+                       flashvars="id=1&amp;width=18&amp;height=18" wmode="transparent">
+            </div>
+        </div>
+        -->
+    </div>
+    <ol start="1" class="dp-c">
+        <li class="alt"><span><span class="keyword">function</span><span>&nbsp;problem(){&nbsp;&nbsp;</span></span></li>
+        <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">var</span><span>&nbsp;objA=</span><span
+                class="keyword">new</span><span>&nbsp;Object();&nbsp;&nbsp;</span></span></li>
+        <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">var</span><span>&nbsp;objB=</span><span
+                class="keyword">new</span><span>&nbsp;Object();&nbsp;&nbsp;</span></span></li>
+        <li class=""><span>&nbsp;&nbsp;</span></li>
+        <li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;objA.b=objB;&nbsp;&nbsp;</span></li>
+        <li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;objB.a=objA;&nbsp;&nbsp;</span></li>
+        <li class="alt"><span>}&nbsp;&nbsp;</span></li>
+    </ol>
+</div>
+<pre name="code" class="javascript" style="display: none;">function problem(){
+	var objA=new Object();
+	var objB=new Object();
+
+	objA.b=objB;
+	objB.a=objA;
+}</pre>
+<p><span style="font-size:18px">　　在这个例子中，objA和objB通过各自的属性相互引用；也就是说，这两个对象的引用次数都是2。在采用标记清除策略的实现中，由于函数执行之后，这两个对象都离开了作用域，因此这种相互引用不是问题。但采用引用计数策略的实现中，当函数执行完毕后，objA和objB还将继续存在，因为它们的引用次数永远不会是0。假如这个函数被重复多次调用，将导致大量内存得不到回收。为此Netscape在Navigator4中放弃了引用计数的方式，转而采用标记清除来实现其垃圾回收机制。可是，引用计数导致的麻烦并未终结。</span>
+</p>
+<span style="font-size:18px">　　我们知道，IE中有一部分对象并不是原生js对象。例如，其DOM和BOM中的对象就是使用C++以COM对象的形式实现的，而COM对象的垃圾回收机制采用的就是引用计数策略。因此，即使IE的js引擎采用标记清除策略来实现，但js访问的COM对象依然是基于引用计数策略的。换句话说，只要在IE中涉及COM对象，就会存在循环引用的问题。<br>
+</span>
+<div class="dp-highlighter bg_javascript">
+    <div class="bar">
+        <!--
+        <div class="tools"><b>[javascript]</b> <a href="#" class="ViewSource" title="view plain"
+                                                  onclick="dp.sh.Toolbar.Command('ViewSource',this);return false;">view
+            plain</a><a href="#" class="CopyToClipboard" title="copy"
+                        onclick="dp.sh.Toolbar.Command('CopyToClipboard',this);return false;">copy</a><a href="#"
+                                                                                                         class="PrintSource"
+                                                                                                         title="print"
+                                                                                                         onclick="dp.sh.Toolbar.Command('PrintSource',this);return false;">print</a><a
+                href="#" class="About" title="?" onclick="dp.sh.Toolbar.Command('About',this);return false;">?</a>
+
+            <div style="position: absolute; left: 426px; top: 1748px; width: 18px; height: 18px; z-index: 99;">
+                <embed id="ZeroClipboardMovie_2"
+                       src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false"
+                       menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_2"
+                       align="middle" allowscriptaccess="always" allowfullscreen="false"
+                       type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"
+                       flashvars="id=2&amp;width=18&amp;height=18" wmode="transparent">
+            </div>
+        </div>
+        -->
+    </div>
+    <ol start="1" class="dp-c">
+        <li class="alt"><span><span class="keyword">var</span><span>&nbsp;element=document.getElementById(</span><span
+                class="string">"some_element"</span><span>);&nbsp;&nbsp;</span></span></li>
+        <li class=""><span><span class="keyword">var</span><span>&nbsp;myObject=</span><span
+                class="keyword">new</span><span>&nbsp;Object();&nbsp;&nbsp;</span></span></li>
+        <li class="alt"><span>myObject.e=element;&nbsp;&nbsp;</span></li>
+        <li class=""><span>element.o=myObject;&nbsp;&nbsp;</span></li>
+    </ol>
+</div>
+<pre name="code" class="javascript" style="display: none;">var element=document.getElementById("some_element");
+var myObject=new Object();
+myObject.e=element;
+element.o=myObject;</pre>
+<p><span style="font-size:18px">　　这个例子在一个DOM元素（element)与一个原生js对象（myObject)之间创建了循环引用。其中，变量myObject有一个名为element的属性指向element对象；而变量element也有一个属性名为o回指myObject。由于存在这个循环引用，即使例子中的DOM从页面中移除，它也永远不会被回收。</span>
+</p>
+<span style="font-size:18px">　　为了避免类似这样的循环引用问题，最好是在不使用它们的时候手工断开原生js对象与DOM元素之间的连接。例如，可以使用下面的代码消除前面例子创建的循环引用：<br>
+</span>
+<div class="dp-highlighter bg_javascript">
+    <div class="bar">
+        <!--
+        <div class="tools"><b>[javascript]</b> <a href="#" class="ViewSource" title="view plain"
+                                                  onclick="dp.sh.Toolbar.Command('ViewSource',this);return false;">view
+            plain</a><a href="#" class="CopyToClipboard" title="copy"
+                        onclick="dp.sh.Toolbar.Command('CopyToClipboard',this);return false;">copy</a><a href="#"
+                                                                                                         class="PrintSource"
+                                                                                                         title="print"
+                                                                                                         onclick="dp.sh.Toolbar.Command('PrintSource',this);return false;">print</a><a
+                href="#" class="About" title="?" onclick="dp.sh.Toolbar.Command('About',this);return false;">?</a>
+
+            <div style="position: absolute; left: 426px; top: 2019px; width: 18px; height: 18px; z-index: 99;">
+                <embed id="ZeroClipboardMovie_3"
+                       src="http://static.blog.csdn.net/scripts/ZeroClipboard/ZeroClipboard.swf" loop="false"
+                       menu="false" quality="best" bgcolor="#ffffff" width="18" height="18" name="ZeroClipboardMovie_3"
+                       align="middle" allowscriptaccess="always" allowfullscreen="false"
+                       type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer"
+                       flashvars="id=3&amp;width=18&amp;height=18" wmode="transparent">
+            </div>
+        </div>
+        -->
+    </div>
+    <ol start="1" class="dp-c">
+        <li class="alt"><span><span>myObject.element=</span><span class="keyword">null</span><span>;&nbsp;&nbsp;</span></span>
+        </li>
+        <li class=""><span>element.o=<span class="keyword">null</span><span>;&nbsp;&nbsp;</span></span></li>
+    </ol>
+</div>
+<pre name="code" class="javascript" style="display: none;">myObject.element=null;
+element.o=null;</pre>
+　　将变量设置为null意味着切断变量与它此前引用的值之间的连接。当垃圾回收器下次运行时，就会删除这些值并回收它们占用的内存。
+
+    

@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="/ppt/koa/style.css">
+<section  style='padding:10px;'>
+    <div class='content'>
+        <h2  style='margin-top: 0px;' id="app-listen-">app.listen(...)</h2>
+        <p>  一个 Koa 应用跟 HTTP server 不是 1-to-1 关系, 一个或多个 Koa 应用可以被加载到一块
+  组成一个更大的包含一个 HTTP server 的应用.</p>
+        <p>  创建并返回一个 http server, 并且支持传递参数
+  <code>Server#listen()</code>. 具体参数可查看 <a href="http://nodejs.org/api/http.html#http_server_listen_port_hostname_backlog_callback">nodejs.org</a>. 如下为一个监听 <code>3000</code> 端口的简单应用:</p>
+        <pre><code class="lang-js">var koa = require('koa');
+var app = koa();
+app.listen(3000);</code></pre>
+        <p>  方法 <code>app.listen(...)</code> 是一个语法糖, 等价于:</p>
+        <pre><code class="lang-js">var http = require('http');
+var koa = require('koa');
+var app = koa();
+http.createServer(app.callback()).listen(3000);</code></pre>
+        <p>  这样你可以同时支持 HTTP 和 HTTPS, 或在多个地址上使用同一个 app.</p>
+        <pre><code class="lang-js">var http = require('http');
+var koa = require('koa');
+var app = koa();
+http.createServer(app.callback()).listen(3000);
+http.createServer(app.callback()).listen(3001);</code></pre>
+        
+    </div>
+</section>

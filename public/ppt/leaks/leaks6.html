@@ -1,0 +1,76 @@
+<h1>泄漏举例和内存管理</h1>
+<h1>IE</h1>
+<span style="color: black">在IE下的JS编程中，以下的编程方式都会造成即使关闭IE也无法释放内存的问题，下面分类给出： 
+    <br>
+    <br>
+        1、给DOM对象添加的属性是一个对象的引用。范例：
+
+    <br>var MyObject = {};
+    <br>
+        document.getElementById('myDiv').myProp = MyObject;
+
+    <br>解决方法：
+
+    <br>在window.onunload事件中写上: document.getElementById('myDiv').myProp = null;
+
+    <br>
+    <br>
+
+    <br>2、DOM对象与JS对象相互引用。范例：
+
+    <br>function Encapsulator(element) {
+
+    <br>this.elementReference = element;
+
+    <br>element.myProp = this;
+    <br>}
+
+    <br>new Encapsulator(document.getElementById('myDiv'));
+    <br>
+        解决方法：
+    <br>在onunload事件中写上: document.getElementById('myDiv').myProp = null;
+    <br>
+    <br>
+    <br>3、给DOM对象用attachEvent绑定事件。范例：
+    <br>function doClick() {}
+    <br>element.attachEvent("onclick", doClick);
+    <br>解决方法：
+    <br>在onunload事件中写上: element.detachEvent('onclick', doClick);
+    <br>
+    <br>
+    <br>4、从外到内执行appendChild。这时即使调用removeChild也无法释放。范例：
+
+    <br>var parentDiv = document.createElement("div");
+    <br>var childDiv = document.createElement("div");
+    <br>document.body.appendChild(parentDiv);
+    <br>parentDiv.appendChild(childDiv);
+    <br>解决方法：
+    <br>从内到外执行appendChild:
+    <br>var parentDiv = document.createElement("div");
+    <br>var childDiv = document.createElement("div");
+    <br>parentDiv.appendChild(childDiv);
+    <br>document.body.appendChild(parentDiv);
+    <br>
+    <br>
+    <br>5、反复重写同一个属性会造成内存大量占用(但关闭IE后内存会被释放)。范例：
+    <br>for(i = 0; i &lt; 5000; i++) {
+    <br>hostElement.text = "asdfasdfasdf";
+    <br>}
+    <br>这种方式相当于定义了5000个属性！
+    <br>解决方法：
+    <br>其实没什么解决方法:P~~~就是编程的时候尽量避免出现这种情况咯~~
+    <br>ps:反复定义是有个上限.浏览器优化掉了
+    <br>
+    <br>
+    <br>说明：
+    <br>1、以上资料均来源于微软官方的MSDN站点，链接地址：
+    <br>大家可以到上面这个地址中看到详细的说明，包括范例和图例都有。只是我英文不太好，看不太懂，如果我上述有失误或有需要补充的地方请大家指出。
+    <br>
+    <br>2、对于第一条，事实上包括 element.onclick = funcRef 这种写法也算在其中，因为这也是一个对对象的引用。在页面onunload时应该释放掉。
+    <br>
+    <br>3、对于第三条，在MSDN的英文说明中好像是说即使调用detachEvent也无法释放内存，因为在attachEvent的时候就已经造成内存“LEAK”了，不过detachEvent后情况还是会好一点。不知道是不是这样，请英文好的亲能够指出。
+    <br>
+    <br>4、在实际编程中，这些内存问题的实际影响并不大，尤其是给客户使用时，客户对此绝不会有察觉，然而这些问题对于程序员来说却始终是个心病 --- 有这样的BUG心里总会觉得不舒服吧？能解决则给与解决，这样是最好的。事实上我在webfx.eae.net这样顶级的JS源码站点中，在它们的源码里都会看到采用上述解决方式进行内存的释放管理。
+</span>
+
+

@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="/ppt/koa/style.css">
+<section style='padding:20px;'>
+    <div class='content'>
+        <h1 id="application">Application</h1>
+        <p>  一个 Koa Application（以下简称 app）由一系列 generator 中间件组成。按照编码顺序在栈内依次执行，从这个角度来看，Koa app 和其他中间件系统（比如 Ruby Rack 或者 Connect/Express ）没有什么太大差别，不过，从另一个层面来看，Koa 提供了一种基于底层中间件编写「语法糖」的设计思路，这让设计中间件变得更简单有趣。</p>
+        <p>  在这些中间件中，有负责内容协商（content-negotation）、缓存控制（cache freshness）、反向代理（proxy support）与重定向等等功能的常用中间件（详见 <a href="#%E4%B8%AD%E9%97%B4%E4%BB%B6middleware">中间件</a> 章节），但如前所述， Koa 内核并不会打包这些中间件，让我们先来看看 Koa 极其简单的 Hello World 应用程序：</p>
+        <p>  Hello world:</p>
+        <pre><code class="lang-js">var koa = require('koa');
+var app = koa();
+
+app.use(function *(){
+  this.body = 'Hello World';
+});
+
+app.listen(3000);</code></pre>
+        <p><strong>译者注：</strong> 与普通的 function 不同，generator functions 以 <code style='color:red;'>function*</code> 声明。以这种关键词声明的函数支持 <code>yield</code></p>
+    </div>
+</section>

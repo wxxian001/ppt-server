@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="/ppt/koa/style.css">
+<section style='padding:140px 100px 100px 100px;'>
+    <div class='content'>
+        <h1 id="context">Context</h1>
+        <p>  Koa 的 Context 把 node 的 request, response 对象包含进一个单独对象, 并提供许多开发 web 应用和 APIs 的有用方法.</p>
+        <p>  许多访问器和方法直接委托为他们 <code>ctx.request</code> 或 <code>ctx.response</code> 的
+  等价方法, 用于访问方便, 有些是完全相同.</p>
+        <p>  这些操作在 HTTP server 开发中使用如此频繁, 所以在这里实现.
+  而不是更高层次框架 这样中间件中就不需要重复实现这些通用的功能.</p>
+        <p>  <em>每个</em> 请求会创建自己的 <code>Context</code>, 在中间件中作为 receiver 引用, 或通过 <code>this</code> 标示符. 如.</p>
+        <pre><code class="lang-js">app.use(function *(){
+  this; // is the Context
+  this.request; // is a koa Request
+  this.response; // is a koa Response
+});</code></pre>
+    </div>
+</section>

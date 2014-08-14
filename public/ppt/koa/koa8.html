@@ -1,0 +1,15 @@
+<link rel="stylesheet" href="/ppt/koa/style.css">
+<section  style='padding:10px;'>
+    <div class='content'>
+        <h2 style='margin-top: 0px;' id="app-callback-">app.callback()</h2>
+        <p>  返回一个可被 <code>http.createServer()</code> 接受的程序实例，也可以将这个返回函数挂载在一个 Connect/Express 应用中。</p>
+        <h2 id="app-use-function-">app.use(function)</h2>
+        <p>  将给定的 function 当做中间件加载到应用中，详见 <a href="#middleware">中间件</a> 章节</p>
+        <h2 id="app-keys-">app.keys=</h2>
+        <p> 设置一个签名 Cookie 的密钥。这些参数会被传递给 <a href="https://github.com/jed/keygrip">KeyGrip</a> 如果你想自己生成一个实例，也可以这样：</p>
+        <pre><code class="lang-js">app.keys = ['im a newer secret', 'i like turtle'];
+app.keys = new KeyGrip(['im a newer secret', 'i like turtle'], 'sha256');</code></pre>
+        <p>  注意，签名密钥只在配置项 <code>signed</code> 参数为真是才会生效：</p>
+        <pre><code class="lang-js">this.cookies.set('name', 'tobi', { signed: true });</code></pre>
+    </div>
+</section>
