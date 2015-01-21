@@ -35,8 +35,10 @@ html, body { height: 100%; }
 	visibility: visible;
 	z-index: 1;
     overflow: auto;
+    /*
     width: 80%;
     margin: 0 10%;
+    */
 }
 
 .no-js body {
@@ -190,7 +192,8 @@ html, body { height: 100%; }
 
 @media screen and (max-width: 47.4375em) {
 	.pt-page h1 {
-		font-size: 3em;
+		/*font-size: 3em;*/
+		font-size: 2em;
 	}
 
 	.pt-triggers .dl-menuwrapper {

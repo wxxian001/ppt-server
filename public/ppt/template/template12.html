@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="/ppt/template/style.css">
+<section>
+    <div class="content">
+        <h1 id="introduction">conditionals(条件)</h1>
+        <p>使用‘?‘、‘??’来实现条件功能</p>
+        <pre>
+{{? it.name }}
+<div>Oh, I love your name, {{=it.name}}!</div>
+{{?? it.age === 0}}
+<div>Guess nobody named you yet!</div>
+{{??}}
+You are {{=it.age}} and still don't have a name?
+{{?}}
+        </pre>
+    </div>
+</section>
+

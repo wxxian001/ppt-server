@@ -51,8 +51,8 @@ app.get('/', function(req, res){
 io.on('connection', function(socket){
   socket.on('control', function(msg){
       var address = this.handshake.address.address;
-      //console.log(address);
-      if(address === '127.0.0.1' || address === 'localhost'){
+      console.log(address);
+      if(address.indexOf('127.0.0.1')>-1 || address.indexOf('localhost')>-1){
           io.emit('control', msg);
       }
   });
