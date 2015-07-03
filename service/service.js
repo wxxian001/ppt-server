@@ -1,4 +1,12 @@
 var fs = require('fs');
+var marked = require('marked');
+// Synchronous highlighting with highlight.js
+marked.setOptions({
+  highlight: function (code) {
+    return require('highlight.js').highlightAuto(code).value;
+  }
+});
+
 module.exports = {
     getData:function*(){
         var packageJson = JSON.parse(fs.readFileSync('./package.json',{encoding:'utf-8'}));
@@ -11,7 +19,23 @@ module.exports = {
                 if(fileNames[i].lastIndexOf('.html') === fileNames[i].length-".html".length){
                     newFileNames.push(fileNames[i]);
                 }
+                if(fileNames[i].lastIndexOf('.md') === fileNames[i].length-".md".length){
+                    newFileNames.push(fileNames[i]);
+                }
             }
+        }
+
+        var cssData = "";
+        var styleCssPath = path+'/style.css';
+        if(fs.existsSync(styleCssPath)){
+            cssData += fs.readFileSync(styleCssPath,{encoding:'utf-8'});
+        }
+
+        var styleData = "";
+        var cssPath = './node_modules/highlight.js/styles/github.css';
+        if(fs.existsSync(cssPath)){
+            cssData += fs.readFileSync(cssPath,{encoding:'utf-8'});
+            styleData = "<style>"+cssData+"</style>";
         }
 
         newFileNames.sort(function(a,b){
@@ -22,7 +46,17 @@ module.exports = {
         });
 
         for(var i=0;i<newFileNames.length;i++){
-            var data = fs.readFileSync(path +'/'+newFileNames[i],{encoding:'utf-8'});
+            var fileName = newFileNames[i];
+            var data = null;
+            if(fileName.lastIndexOf('.html') > 0){
+                data = fs.readFileSync(path +'/'+newFileNames[i],{encoding:'utf-8'});
+            }else if(fileName.lastIndexOf('.md') > 0){
+                data = fs.readFileSync(path +'/'+newFileNames[i],{encoding:'utf-8'});
+                data = marked(data);
+            }
+            if(i === 0){
+                data = styleData + data;
+            }
             dataArr.push(data);
         }
 

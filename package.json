@@ -1,15 +1,17 @@
 {
   "name": "socket-ppt-server",
   "version": "0.0.1",
-  "pptSrc":"koa",
-  "description": "my first socket.io app",
+  "pptSrc": "androidh5",
+  "description": "need class syntax",
   "dependencies": {
-    "express": "4.3.1",
-    "socket.io": "1.0.2",
+    "highlight.js": "^8.4.0",
     "koa": "0.8.1",
+    "koa-route": "~1.1.4",
+    "koa-send": "~1.2.3",
     "koa-views": "~2.0.3",
-    "underscore": "~1.6.0",
-    "koa-send": "~1.2.3",    
-    "koa-route": "~1.1.4"
+    "markdown": "^0.5.0",
+    "marked": "^0.3.2",
+    "socket.io": "1.0.2",
+    "underscore": "~1.6.0"
   }
 }
